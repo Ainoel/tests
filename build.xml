@@ -1,0 +1,44 @@
+<project name="calc" default="test" basedir=".">
+    <property name="src" value="calc"/>
+    <property name="build" value="build"/>
+    <property name="lib" value="lib"/>
+
+    <path id="class.path">
+        <fileset dir="lib" includes="*.jar"/>
+    </path>
+
+    <path id="junit.class.path">
+        <fileset dir="lib" includes="*.jar"/>
+        <pathelement location="${build}"/>
+    </path>
+
+    <target name="build">
+        <mkdir dir="${build}"/>
+        <javac srcdir="${src}" destdir="${build}" encoding="UTF-8" includeantruntime="false">
+            <classpath refid="class.path"/>
+        </javac>
+    </target>
+
+    <target name="run" depends="build">
+        <java classpath="${build}" classname="gui.MainWindow" fork="true">
+        </java>
+    </target>
+
+    <target name="test" depends="build">
+        <mkdir dir="build/reports"/>
+        <junit printsummary="yes" haltonerror="true" haltonfailure="yes">
+            <classpath refid="junit.class.path"/>
+            <formatter type="plain"/>
+
+            <batchtest fork="yes" todir="${build}/reports">
+                <fileset dir="${src}">
+                    <include name="**/*Tests*.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build}"/>
+    </target>
+</project>
